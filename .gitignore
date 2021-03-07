@@ -1,0 +1,6 @@
+pagination-backend/node_modules
+pagination-frontend/node_modules
+
+config.js
+
+.DS_Store

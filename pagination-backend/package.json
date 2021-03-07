@@ -1,0 +1,28 @@
+{
+  "name": "pagination-backend",
+  "version": "1.0.0",
+  "description": "Backend for my pagination frontend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/achmurali/pagination-react.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/achmurali/pagination-react/issues"
+  },
+  "homepage": "https://github.com/achmurali/pagination-react#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.11.19"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
