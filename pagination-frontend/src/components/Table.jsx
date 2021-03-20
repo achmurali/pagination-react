@@ -12,8 +12,6 @@ import { Button, StylesProvider } from '@material-ui/core';
 
 const url = 'http://localhost:3000/data?'
 
-let buttonState = {};
-
 const useStyles = makeStyles({
     root: {
         border: '1px solid black'
