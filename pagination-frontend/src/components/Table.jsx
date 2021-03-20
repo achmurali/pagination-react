@@ -8,9 +8,11 @@ import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid'
 import axios from 'axios'
 import { makeStyles } from '@material-ui/styles';
-import { Button } from '@material-ui/core';
+import { Button, StylesProvider } from '@material-ui/core';
 
 const url = 'http://localhost:3000/data?'
+
+let buttonState = {};
 
 const useStyles = makeStyles({
     root: {
@@ -34,7 +36,6 @@ const useStyles = makeStyles({
 const DefaultTable = () => {
     const [data, setData] = useState([])
     const [page, setPage] = useState(1)
-    const [currPage, setCurrPage] = useState(1)
     const [count, setCount] = useState(0)
     const [buttons, setButtons] = useState({
         firstButton: false,
@@ -42,8 +43,13 @@ const DefaultTable = () => {
         prevButton: false,
         lastButton: false
     })
+    const [isLoading, setIsLoading] = useState(false)
 
     const styles = useStyles();
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     const resetButtonStatus = (buttons) => {
         buttons.nextButton = false;
@@ -65,14 +71,17 @@ const DefaultTable = () => {
         }
         resetButtonStatus(newState);
         if (page === 1) {
-            resetButtonStatus(buttons)
+            resetButtonStatus(newState)
             newState.firstButton = true;
             newState.prevButton = true;
         }
-        if (page === count) {
-            resetButtonStatus(buttons)
+        else if (page === count) {
+            resetButtonStatus(newState)
             newState.lastButton = true;
             newState.nextButton = true;
+        }
+        else {
+            resetButtonStatus(newState)
         }
 
         setButtons(newState);
@@ -80,23 +89,40 @@ const DefaultTable = () => {
 
     useEffect(() => {
         const getData = async () => {
+            //buttonState = { ...buttons }
+            setIsLoading(true)
             const result = await axios.get(`${url}page=${page}&size=${10}`)
-            console.log(result.data.page)
+            console.log("1 " + result.data.page)
             setData(result.data.users);
-            console.log(result.data.count)
+            console.log(page)
             setCount(Math.round(result.data.count / 10))
+            setIsLoading(false)
             setButtonStatus()
-            console.log(count)
         }
         getData()
-
     }, [])
 
     useEffect(() => {
+        if (isLoading) {
+            setButtons({
+                firstButton: true,
+                lastButton: true,
+                nextButton: true,
+                prevButton: true,
+            })
+        }
+    }, [isLoading])
+
+    useEffect(() => {
         const getData = async () => {
+            //buttonState = { ...buttons }
+            setIsLoading(true)
+            await sleep(1000)
+            console.log(page)
             const result = await axios.get(`${url}page=${page}&size=${10}`)
             setData(result.data.users)
-            console.log(result.data.page)
+            console.log("2 " + result.data.page)
+            setIsLoading(false)
             setButtonStatus()
         }
         getData()
@@ -120,7 +146,7 @@ const DefaultTable = () => {
                         <TableBody>
                             {(data.length === 0 ? <></> : data.map(ele => {
                                 return (
-                                    <TableRow>
+                                    <TableRow key={ele.ip_address}>
                                         <TableCell>{ele.first_name}</TableCell>
                                         <TableCell>{ele.last_name}</TableCell>
                                         <TableCell>{ele.email}</TableCell>
